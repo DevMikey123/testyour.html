@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Tester</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="code_icon.png" type="image/png">
+</head>
+<body>
+    <header>
+        <h1><span class="material-icons">code</span> Code Tester</h1>
+        <div class="menu">
+            <button id="theme-switcher">
+                <span class="material-icons" id="theme-icon">dark_mode</span>
+            </button>
+            <div class="dropdown">
+                <button class="dropbtn">Examples
+                    <span class="material-icons">arrow_drop_down</span>
+                </button>
+                <div class="dropdown-content" id="examples-menu">
+                    <!-- Example buttons will be added dynamically -->
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="editor">
+            <textarea id="html-code" placeholder="HTML Code"></textarea>
+            <textarea id="css-code" placeholder="CSS Code"></textarea>
+            <textarea id="js-code" placeholder="JavaScript Code"></textarea>
+            <div class="controls">
+                <button id="run-code">
+                    <span class="material-icons">play_arrow</span> Run Code
+                </button>
+                <button id="paste-code">
+                    <span class="material-icons">content_paste</span> Paste Code
+                </button>
+                <button id="download-code">
+                    <span class="material-icons">file_download</span> Download Code
+                </button>
+                <label class="toggle-container">
+                    <input type="checkbox" id="save-progress">
+                    <span class="slider"></span>
+                    <span class="material-icons">save</span>
+                </label>
+                <button id="reset-code">
+                    <span class="material-icons">restart_alt</span> Reset Code
+                </button>
+            </div>
+        </div>
+        <div class="output-container">
+            <div id="output"></div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; <a href="https://github.com/DevMikey123" target="_blank">DevMikey123</a></p>
+        <button id="report-bug">
+            <span class="material-icons">bug_report</span> Report Bug
+        </button>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
