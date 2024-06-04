@@ -12,9 +12,6 @@
     <header>
         <h1><span class="material-icons">code</span> Code Tester</h1>
         <div class="menu">
-            <button id="theme-switcher">
-                <span class="material-icons" id="theme-icon">dark_mode</span>
-            </button>
             <div class="dropdown">
                 <button class="dropbtn">Examples
                     <span class="material-icons">arrow_drop_down</span>
@@ -23,6 +20,12 @@
                     <!-- Example buttons will be added dynamically -->
                 </div>
             </div>
+            <button id="theme-switcher" title="Toggle Dark Mode">
+                <span class="material-icons">dark_mode</span>
+            </button>
+            <button id="history-button" title="View History">
+                <span class="material-icons">history</span>
+            </button>
         </div>
     </header>
     <main>
@@ -31,23 +34,33 @@
             <textarea id="css-code" placeholder="CSS Code"></textarea>
             <textarea id="js-code" placeholder="JavaScript Code"></textarea>
             <div class="controls">
-                <button id="run-code">
-                    <span class="material-icons">play_arrow</span> Run Code
+                <button id="run-code" title="Run Code">
+                    <span class="material-icons">play_arrow</span> Run
                 </button>
-                <button id="paste-code">
-                    <span class="material-icons">content_paste</span> Paste Code
+                <button id="paste-code" title="Paste Code">
+                    <span class="material-icons">content_paste</span> Paste
                 </button>
-                <button id="download-code">
-                    <span class="material-icons">file_download</span> Download Code
+                <button id="download-code" title="Download Code">
+                    <span class="material-icons">file_download</span> Download
                 </button>
-                <label class="toggle-container">
+                <button id="reset-code" title="Reset Code">
+                    <span class="material-icons">restart_alt</span> Reset
+                </button>
+                <label class="toggle-container" title="Toggle Live Updates">
+                    <input type="checkbox" id="live-update">
+                    <span class="slider"></span>
+                    <span class="material-icons">update</span>
+                </label>
+                <label class="toggle-container" title="Toggle CSS and JS Input Visibility">
+                    <input type="checkbox" id="toggle-inputs">
+                    <span class="slider"></span>
+                    <span class="material-icons">visibility_off</span>
+                </label>
+                <label class="toggle-container" title="Save Progress">
                     <input type="checkbox" id="save-progress">
                     <span class="slider"></span>
                     <span class="material-icons">save</span>
                 </label>
-                <button id="reset-code">
-                    <span class="material-icons">restart_alt</span> Reset Code
-                </button>
             </div>
         </div>
         <div class="output-container">
