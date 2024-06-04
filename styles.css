@@ -9,7 +9,6 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    overflow-x: hidden;
 }
 
 body.dark {
@@ -25,6 +24,8 @@ header {
     background-color: #6200ea;
     color: #fff;
     border-radius: 0 0 25px 25px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 header h1 {
@@ -57,11 +58,12 @@ header h1 .material-icons {
     border-radius: 25px;
     display: flex;
     align-items: center;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .dropbtn:hover {
     background-color: #3700b3;
+    transform: scale(1.1);
 }
 
 .dropdown-content {
@@ -71,7 +73,7 @@ header h1 .material-icons {
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    border-radius: 7px;
+    border-radius: 25px;
     overflow: hidden;
 }
 
@@ -86,41 +88,52 @@ header h1 .material-icons {
     cursor: pointer;
     background-color: #fff;
     border-radius: 0;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .dropdown-content button:hover {
     background-color: #ddd;
+    transform: scale(1.1);
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
+body.dark .dropdown-content {
+    background-color: #333;
+}
+
+body.dark .dropdown-content button {
+    color: white;
+}
+
 main {
     flex: 1;
     padding: 1rem;
     display: flex;
+    flex-direction: column;
     width: 100%;
     box-sizing: border-box;
 }
 
 .editor {
-    width: 50%;
     display: flex;
     flex-direction: column;
+    flex: 1;
+    margin-bottom: 1rem;
 }
 
 textarea {
     width: 100%;
-    height: 150px;
+    height: 100px;
     margin-bottom: 1rem;
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 7px;
     resize: vertical;
     font-family: monospace;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 textarea.dark {
@@ -130,11 +143,9 @@ textarea.dark {
 
 .controls {
     display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 1rem 0;
-    align-items: center;
     flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 button {
@@ -142,52 +153,17 @@ button {
     background-color: #6200ea;
     color: #fff;
     border: none;
-    border-radius: 7px;
+    border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
 }
 
 button:hover {
     background-color: #3700b3;
-}
-
-.output-container {
-    width: 50%;
-    border: 1px solid #ccc;
-    border-radius: 7px;
-    overflow: hidden;
-    resize: vertical;
-    margin-bottom: 1rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-#output {
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    background: #fff;
-    padding: 0.5rem;
-    box-sizing: border-box;
-    overflow: auto;
-    flex-grow: 1;
-}
-
-#theme-switcher {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #fff;
-    transition: transform 1s;
-}
-
-#theme-icon {
-    transition: transform 1s;
+    transform: scale(1.1);
 }
 
 .toggle-container {
@@ -230,25 +206,54 @@ button:hover {
     transform: translateX(20px);
 }
 
+.output-container {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+}
+
+#output {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    background: #fff;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    overflow: auto;
+    flex-grow: 1;
+}
+
 footer {
     text-align: center;
     padding: 1rem;
     background-color: #6200ea;
     color: #fff;
     border-radius: 25px 25px 0 0;
-    width: 100%;
     margin-top: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+footer p, footer button {
+    margin: 0;
 }
 
 footer a {
     color: #fff;
     text-decoration: none;
+    transition: color 0.3s;
 }
 
-footer button {
+footer a:hover {
+    color: #bbb;
+}
+
+#report-bug {
     background: none;
     border: none;
     color: #fff;
@@ -256,4 +261,9 @@ footer button {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    transition: color 0.3s;
+}
+
+#report-bug:hover {
+    color: #bbb;
 }
