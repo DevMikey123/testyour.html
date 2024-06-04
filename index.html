@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <h1><span class="material-icons">code</span> Code Tester</h1>
+        <h1><span class="material-icons">code</span>testyour.html</h1>
         <div class="menu">
             <div class="dropdown">
                 <button class="dropbtn">Examples
@@ -25,6 +25,9 @@
             </button>
             <button id="history-button" title="View History">
                 <span class="material-icons">history</span>
+            </button>
+            <button id="report-bug" title="Report Bug">
+                <span class="material-icons">bug_report</span>
             </button>
         </div>
     </header>
@@ -69,10 +72,19 @@
     </main>
     <footer>
         <p>&copy; <a href="https://github.com/DevMikey123" target="_blank">DevMikey123</a></p>
-        <button id="report-bug">
-            <span class="material-icons">bug_report</span> Report Bug
-        </button>
     </footer>
+    <div id="cookie-popup" class="cookie-popup">
+        <p>This website uses cookies to ensure you get the best experience. Do you accept cookies?</p>
+        <button id="accept-cookies">Allow</button>
+        <button id="decline-cookies">Decline</button>
+    </div>
+    <div id="history-popup" class="history-popup">
+        <div class="history-content">
+            <span class="close" id="close-history">&times;</span>
+            <h2>Run History</h2>
+            <ul id="history-list"></ul>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="script.js"></script>
