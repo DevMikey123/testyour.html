@@ -1,249 +1,92 @@
-document.getElementById('run-code').addEventListener('click',  () => {
-    const htmlCode = document.getElementById('html-code').value;
-    const cssCode = `<style>${document.getElementById('css-code').value}</style>`;
-    const jsCode = `<script>${document.getElementById('js-code').value}<\/script>`;
-    const output = document.getElementById('output');
-    
-    output.innerHTML = htmlCode + cssCode + jsCode;
-});
-
-document.getElementById('paste-code').addEventListener('click', async () => {
-    try {
-        const text = await navigator.clipboard.readText();
-        if (text.includes('<html>')) {
-            document.getElementById('html-code').value = text;
-        } else if (text.includes('<style>')) {
-            document.getElementById('css-code').value = text;
-        } else if (text.includes('<script>')) {
-            document.getElementById('js-code').value = text;
-        } else {
-            alert('Unrecognized code format.');
-        }
-    } catch (err) {
-        console.error('Failed to read clipboard contents: ', err);
-    }
-});
-
-document.getElementById('theme-switcher').addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-    document.querySelectorAll('textarea').forEach(textarea => textarea.classList.toggle('dark'));
-    const themeIcon = document.querySelector('#theme-switcher .material-icons');
-    themeIcon.textContent = document.body.classList.contains('dark') ? 'light_mode' : 'dark_mode';
-});
-
-document.getElementById('download-code').addEventListener('click', () => {
-    const htmlCode = document.getElementById('html-code').value;
-    const cssCode = document.getElementById('css-code').value;
-    const jsCode = document.getElementById('js-code').value;
-
-    const zip = new JSZip();
-    zip.file("index.html", htmlCode);
-    zip.file("style.css", cssCode);
-    zip.file("script.js", jsCode);
-
-    zip.generateAsync({ type: 'blob' }).then(content => {
-        saveAs(content, "code.zip");
-    });
-});
-
-document.getElementById('save-progress').addEventListener('change', (event) => {
-    if (event.target.checked) {
-        localStorage.setItem('saveProgress', 'true');
-        localStorage.setItem('htmlCode', document.getElementById('html-code').value);
-        localStorage.setItem('cssCode', document.getElementById('css-code').value);
-        localStorage.setItem('jsCode', document.getElementById('js-code').value);
-    } else {
-        localStorage.removeItem('saveProgress');
-        localStorage.removeItem('htmlCode');
-        localStorage.removeItem('cssCode');
-        localStorage.removeItem('jsCode');
-    }
-});
-
-document.getElementById('reset-code').addEventListener('click', () => {
-    document.getElementById('html-code').value = '';
-    document.getElementById('css-code').value = '';
-    document.getElementById('js-code').value = '';
-    document.getElementById('output').innerHTML = '';
-});
-
-document.getElementById('live-update').addEventListener('change', (event) => {
-    if (event.target.checked) {
-        document.querySelectorAll('textarea').forEach(textarea => {
-            textarea.addEventListener('input', runCode);
-        });
-    } else {
-        document.querySelectorAll('textarea').forEach(textarea => {
-            textarea.removeEventListener('input', runCode);
-        });
-    }
-});
-
-document.getElementById('toggle-inputs').addEventListener('change', (event) => {
-    const cssInput = document.getElementById('css-code');
-    const jsInput = document.getElementById('js-code');
-    if (event.target.checked) {
-        cssInput.style.display = 'none';
-        jsInput.style.display = 'none';
-    } else {
-        cssInput.style.display = 'block';
-        jsInput.style.display = 'block';
-    }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('saveProgress') === 'true') {
-        document.getElementById('save-progress').checked = true;
-        document.getElementById('html-code').value = localStorage.getItem('htmlCode');
-        document.getElementById('css-code').value = localStorage.getItem('cssCode');
-        document.getElementById('js-code').value = localStorage.getItem('jsCode');
-    }
-
-    const examples = [
-        {
-            name: 'Hello World',
-            icon: 'public',
-            html: '<h1>Hello World</h1>',
-            css: 'h1 { color: red; }',
-            js: 'console.log("Hello World");'
-        },
-        {
-            name: 'Button Click',
-            icon: 'touch_app',
-            html: '<button id="myButton">Click me</button>',
-            css: '#myButton { color: blue; }',
-            js: 'document.getElementById("myButton").onclick = function() { alert("Button clicked!"); };'
-        },
-        {
-            name: 'Change Background',
-            icon: 'palette',
-            html: '<button id="bgButton">Change Background</button>',
-            css: 'body { transition: background-color 0.3s; }',
-            js: 'document.getElementById("bgButton").onclick = function() { document.body.style.backgroundColor = "lightblue"; };'
-        },
-        {
-            name: 'Clock',
-            icon: 'schedule',
-            html: '<div id="clock"></div>',
-            css: '#clock { font-size: 24px; color: green; }',
-            js: 'if (getCookie("acceptCookies") === "true") { setInterval(() => { document.getElementById("clock").innerText = new Date().toLocaleTimeString(); }, 1000); } else { document.getElementById("clock").innerText = "Cookies declined, unable to show local time."; }'
-        },
-        {
-            name: 'Counter',
-            icon: 'exposure_plus_1',
-            html: '<button id="increment">Increment</button><p id="counter">0</p>',
-            css: '#increment { margin-right: 10px; } #counter { display: inline; }',
-            js: 'document.getElementById("increment").onclick = () => { const counter = document.getElementById("counter"); counter.innerText = parseInt(counter.innerText) + 1; };'
-        }
-    ];
-
-    const exampleMenu = document.getElementById('examples-menu');
-
-    examples.forEach((example, index) => {
-        const button = document.createElement('button');
-        button.innerHTML = `<span class="material-icons">${example.icon}</span> ${example.name}`;
-        button.addEventListener('click', () => {
-            document.getElementById('html-code').value = example.html;
-            document.getElementById('css-code').value = example.css;
-            document.getElementById('js-code').value = example.js;
-            runCode();
-            document.title = example.name;
-            const link = document.querySelector('link[rel="icon"]');
-            link.href = `example${index + 1}_icon.png`;
-        });
-        exampleMenu.appendChild(button);
-    });
-
-    const acceptCookiesBtn = document.getElementById('accept-cookies');
-    const declineCookiesBtn = document.getElementById('decline-cookies');
-    const cookiePopup = document.getElementById('cookie-popup');
-
-    if (!getCookie('acceptCookies') && !getCookie('declineCookies')) {
-        cookiePopup.classList.add('show');
-    }
-
-    acceptCookiesBtn.addEventListener('click', () => {
-        setCookie('acceptCookies', 'true', 365);
-        cookiePopup.classList.remove('show');
-        location.reload();
-    });
-
-    declineCookiesBtn.addEventListener('click', () => {
-        setCookie('declineCookies', 'true', 365);
-        cookiePopup.classList.remove('show');
-        location.reload();
-    });
-
-    const historyButton = document.getElementById('history-button');
-    const historyPopup = document.getElementById('history-popup');
-    const closeHistoryButton = document.getElementById('close-history');
-    const historyList = document.getElementById('history-list');
-
-    historyButton.addEventListener('click', () => {
-        const history = JSON.parse(localStorage.getItem('codeHistory') || '[]');
-        historyList.innerHTML = '';
-        history.forEach(item => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<span class="material-icons">${item.icon}</span> ${item.name} <button data-index="${item.index}" class="insert-button">Insert</button>`;
-            historyList.appendChild(listItem);
-        });
-        historyPopup.style.display = 'flex';
-    });
-
-    closeHistoryButton.addEventListener('click', () => {
-        historyPopup.style.display = 'none';
-    });
-
-    document.addEventListener('click', (event) => {
-        if (event.target.classList.contains('insert-button')) {
-            const index = event.target.getAttribute('data-index');
-            const history = JSON.parse(localStorage.getItem('codeHistory') || '[]');
-            const item = history.find(h => h.index == index);
-            if (item) {
-                document.getElementById('html-code').value = item.html;
-                document.getElementById('css-code').value = item.css;
-                document.getElementById('js-code').value = item.js;
-                runCode();
-            }
-        }
-    });
-
-    function runCode() {
-        const htmlCode = document.getElementById('html-code').value;
-        const cssCode = `<style>${document.getElementById('css-code').value}</style>`;
-        const jsCode = `<script>${document.getElementById('js-code').value}<\/script>`;
-        const output = document.getElementById('output');
-        output.innerHTML = htmlCode + cssCode + jsCode;
-        saveToHistory(htmlCode, cssCode, jsCode);
-    }
-
-    function saveToHistory(html, css, js) {
-        const history = JSON.parse(localStorage.getItem('codeHistory') || '[]');
-        const index = history.length ? history[history.length - 1].index + 1 : 0;
-        history.push({ index, name: document.title, html, css, js, icon: document.querySelector('link[rel="icon"]').href });
-        localStorage.setItem('codeHistory', JSON.stringify(history));
-    }
-
-    function setCookie(name, value, days) {
-        const d = new Date();
-        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-        const expires = "expires=" + d.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";path=/";
-    }
-
-    function getCookie(name) {
-        const cname = name + "=";
-        const decodedCookie = decodeURIComponent(document.cookie);
-        const ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(cname) == 0) {
-                return c.substring(cname.length, c.length);
-            }
-        }
-        return "";
-    }
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Tester</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="code_icon.png" type="image/png">
+</head>
+<body>
+    <header>
+        <h1><span class="material-icons">code</span>testyour.html</h1>
+        <div class="menu">
+            <div class="dropdown">
+                <button class="dropbtn">Examples
+                    <span class="material-icons">arrow_drop_down</span>
+                </button>
+                <div class="dropdown-content" id="examples-menu">
+                    <!-- Example buttons will be added dynamically -->
+                </div>
+            </div>
+            <button id="theme-switcher" title="Toggle Dark Mode">
+                <span class="material-icons">dark_mode</span>
+            </button>
+            <button id="history-button" title="View History">
+                <span class="material-icons">history</span>
+            </button>
+            <button id="report-bug" title="Report Bug">
+                <span class="material-icons">bug_report</span>
+            </button>
+        </div>
+    </header>
+    <main>
+        <div class="editor">
+            <textarea id="html-code" placeholder="HTML Code"></textarea>
+            <textarea id="css-code" placeholder="CSS Code"></textarea>
+            <textarea id="js-code" placeholder="JavaScript Code"></textarea>
+            <div class="controls">
+                <button id="run-code" title="Run Code">
+                    <span class="material-icons">play_arrow</span> Run
+                </button>
+                <button id="paste-code" title="Paste Code">
+                    <span class="material-icons">content_paste</span> Paste
+                </button>
+                <button id="download-code" title="Download Code">
+                    <span class="material-icons">file_download</span> Download
+                </button>
+                <button id="reset-code" title="Reset Code">
+                    <span class="material-icons">restart_alt</span> Reset
+                </button>
+                <label class="toggle-container" title="Toggle Live Updates">
+                    <input type="checkbox" id="live-update">
+                    <span class="slider"></span>
+                    <span class="material-icons">update</span>
+                </label>
+                <label class="toggle-container" title="Toggle CSS and JS Input Visibility">
+                    <input type="checkbox" id="toggle-inputs">
+                    <span class="slider"></span>
+                    <span class="material-icons">visibility_off</span>
+                </label>
+                <label class="toggle-container" title="Save Progress">
+                    <input type="checkbox" id="save-progress">
+                    <span class="slider"></span>
+                    <span class="material-icons">save</span>
+                </label>
+            </div>
+        </div>
+        <div class="output-container">
+            <div id="output"></div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; <a href="https://github.com/DevMikey123" target="_blank">DevMikey123</a></p>
+    </footer>
+    <div id="cookie-popup" class="cookie-popup">
+        <p>This website uses cookies to ensure you get the best experience. Do you accept cookies?</p>
+        <button id="accept-cookies">Allow</button>
+        <button id="decline-cookies">Decline</button>
+    </div>
+    <div id="history-popup" class="history-popup">
+        <div class="history-content">
+            <span class="close" id="close-history">&times;</span>
+            <h2>Run History</h2>
+            <ul id="history-list"></ul>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
