@@ -174,3 +174,17 @@ function runCode() {
     output.innerHTML = '';
     output.appendChild(iframe);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (isMobile()) {
+        document.getElementById('mobilePopup').style.display = 'block';
+    }
+});
+
+function isMobile() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
+function closePopup() {
+    document.getElementById('mobilePopup').style.display = 'none';
+}
