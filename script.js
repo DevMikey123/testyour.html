@@ -1,24 +1,4 @@
-document.getElementById('run-code').addEventListener('click', () => {
-    const htmlCode = document.getElementById('html-code').value;
-    const cssCode = document.getElementById('css-code').value;
-    const jsCode = document.getElementById('js-code').value;
-
-    const output = document.getElementById('output');
-    
-    const combinedCode = `
-        <html>
-        <head>
-            <style>${cssCode}</style>
-        </head>
-        <body>
-            ${htmlCode}
-            <script>${jsCode}<\/script>
-        </body>
-        </html>
-    `;
-    
-    output.innerHTML = combinedCode;
-});
+document.getElementById('run-code').addEventListener('click', runCode);
 
 document.getElementById('paste-code').addEventListener('click', async () => {
     try {
@@ -40,12 +20,8 @@ document.getElementById('paste-code').addEventListener('click', async () => {
 document.getElementById('theme-switcher').addEventListener('click', () => {
     document.body.classList.toggle('dark');
     document.querySelectorAll('textarea').forEach(textarea => textarea.classList.toggle('dark'));
-    const themeIcon = document.getElementById('theme-icon');
+    const themeIcon = document.querySelector('#theme-switcher .material-icons');
     themeIcon.textContent = document.body.classList.contains('dark') ? 'light_mode' : 'dark_mode';
-    themeIcon.style.transform = 'rotate(360deg)';
-    setTimeout(() => {
-        themeIcon.style.transform = '';
-    }, 1000);
 });
 
 document.getElementById('download-code').addEventListener('click', () => {
@@ -80,6 +56,30 @@ document.getElementById('reset-code').addEventListener('click', () => {
     document.getElementById('css-code').value = '';
     document.getElementById('js-code').value = '';
     document.getElementById('output').innerHTML = '';
+});
+
+document.getElementById('live-update').addEventListener('change', (event) => {
+    if (event.target.checked) {
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', runCode);
+        });
+    } else {
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.removeEventListener('input', runCode);
+        });
+    }
+});
+
+document.getElementById('toggle-inputs').addEventListener('change', (event) => {
+    const cssInput = document.getElementById('css-code');
+    const jsInput = document.getElementById('js-code');
+    if (event.target.checked) {
+        cssInput.style.display = 'none';
+        jsInput.style.display = 'none';
+    } else {
+        cssInput.style.display = 'block';
+        jsInput.style.display = 'block';
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('html-code').value = example.html;
             document.getElementById('css-code').value = example.css;
             document.getElementById('js-code').value = example.js;
-            document.getElementById('output').innerHTML = example.html + `<style>${example.css}</style>` + `<script>${example.js}<\/script>`;
+            runCode();
             document.title = example.name;
             document.querySelector("link[rel='icon']").href = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22black%22><text y=%2220%22 font-size=%2224%22>${example.icon}</text></svg>`;
         });
@@ -147,3 +147,30 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('report-bug').addEventListener('click', () => {
     window.open('https://github.com/DevMikey123/testyour.html/issues', '_blank');
 });
+
+function runCode() {
+    const htmlCode = document.getElementById('html-code').value;
+    const cssCode = document.getElementById('css-code').value;
+    const jsCode = document.getElementById('js-code').value;
+
+    const output = document.getElementById('output');
+    const blob = new Blob([`
+        <html>
+        <head>
+            <style>${cssCode}</style>
+        </head>
+        <body>
+            ${htmlCode}
+            <script>${jsCode}<\/script>
+        </body>
+        </html>
+    `], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    output.innerHTML = '';
+    output.appendChild(iframe);
+}
