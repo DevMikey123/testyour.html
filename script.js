@@ -180,11 +180,3 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('mobilePopup').style.display = 'block';
     }
 });
-
-function isMobile() {
-    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-}
-
-function closePopup() {
-    document.getElementById('mobilePopup').style.display = 'none';
-}
