@@ -29,7 +29,7 @@ function injectPopupStyles() {
             transform: translate(-50%, -50%);
             background-color: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 25px;
             width: 80%;
             max-width: 400px;
             text-align: center;
